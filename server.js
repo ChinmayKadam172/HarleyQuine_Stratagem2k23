@@ -25,32 +25,33 @@ mongoose.connect(
 );
 
 const regInfo = {
-	Uid: string,
-	First_name: string,
-	Dob: date,
-	Gender: string,
-	Address: string,
-	Phone: string,
-	Email: string,
-	Blood_group: string,
-	Chronic_Medical_Conditions: string,
-	Long_term_ongoing_Medication: string,
+	Uid: String,
+	First_name: String,
+	Dob: Date,
+	Gender: String,
+	Address: String,
+	Phone: String,
+	Email: String,
+	Blood_group: String,
+	Chronic_Medical_Conditions: Array,
+	Long_term_ongoing_Medication: Array,
 };
 
-const Appointment = {
-	Date: date,
-	Time: string,
-	Doctor: string,
-	Uid: string,
+const appointment = {
+	Date: Date,
+	Time: String,
+	Doctor: String,
+	Uid: String,
 };
 
 // schema land ends
 
 const RegInfo = mongoose.model("RegInfo", regInfo);
+const Appointment = mongoose.model("Appointment",appointment);
 
 console.log(PORT);
 
-app.route("/create").post(function (req, res) {
+app.route("/createPatient").post(function (req, res) {
 	const newItem = new RegInfo({
 		First_name: req.body.First_name,
 		Dob: req.body.dob,
@@ -65,7 +66,7 @@ app.route("/create").post(function (req, res) {
 
 	newItem.save(function (err) {
 		if (!err) {
-			newStock.save(function (err) {
+			newItem.save(function (err) {
 				if (!err) {
 				} else {
 					console.log("FAIL", err);
@@ -79,6 +80,63 @@ app.route("/create").post(function (req, res) {
 		}
 	});
 });
+
+app.route("/getPatient").get(function (req, res) {
+	RegInfo.findOne({"Uid":req.body.uid}, function (err, foundPatient) {
+	  if (foundPatient) {
+		res.send(foundPatient);
+	  } else {
+		res.send(err);
+	  }
+	});
+  });
+
+app.route("/createAppointment").post(function (req, res) {
+	console.log(req.body);
+	const newItem = new Appointment({
+		Date: req.body.Date,
+		Time: req.body.Time,
+		Doctor: req.body.Doctor,
+		Uid: req.body.Uid,
+	});
+
+	newItem.save(function (err) {
+		if (!err) {
+			newItem.save(function (err) {
+				if (!err) {
+				} else {
+					console.log("FAIL", err);
+					res.send("FAIL");
+				}
+			});
+			res.send("SUCCESS");
+		} else {
+			console.log("FAIL", err);
+			res.send("FAIL");
+		}
+	});
+});
+
+app.route("/getAppointment").get(function (req, res) {
+	Appointment.findOne({"uid":req.body.uid}, function (err, foundPatient) {
+	  if (foundPatient) {
+		res.send(foundPatient);
+	  } else {
+		res.send(err);
+	  }
+	});
+  });
+
+app.route("/getAllAppointments").get(function (req, res) {
+	Appointment.find({}, function (err, foundPatient) {
+	  if (foundPatient) {
+		res.send(foundPatient);
+	  } else {
+		res.send(err);
+	  }
+	});
+  });
+
 
 // Item => People(patient)
 
