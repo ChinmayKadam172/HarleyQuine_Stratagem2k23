@@ -14,42 +14,31 @@ const FaceRecognition = () => {
       console.log("Models loaded");
     };
 
-    const loadLabeledImages = async () => {
-      //insert new users uid
-      const labels = [];
+    const loadDescriptors = async () => {
+      // array of 5 uploaded images
+      const uploadedImages = [];
 
-      //images path
-      const FACES_URL = process.env.PUBLIC_URL + "/labeled_images";
-      const descriptions = await Promise.all(
-        labels.map(async (label) => {
-          const faceDescriptors = [];
-          for (let i = 1; i <= 5; i++) {
-            const img = await faceapi.fetchImage(
-              FACES_URL + `/${label}/${i}.jpg`
-            );
+      const descriptors = await Promise.all(
+        uploadedImages.map(async (image) => {
+          const img = await faceapi.bufferToImage(image);
 
-            const detections = await faceapi
-              .detectSingleFace(img)
-              .withFaceLandmarks()
-              .withFaceDescriptor();
-            console.log("horay");
-            faceDescriptors.push(detections.descriptor);
-          }
-          return {
-            label,
-            descriptors: faceDescriptors,
-          };
+          const detections = await faceapi
+            .detectSingleFace(img)
+            .withFaceLandmarks()
+            .withFaceDescriptor();
+          console.log("horay");
+          return detections.descriptor;
         })
       );
 
-      console.log("Labeled images loaded");
-      console.log(descriptions);
+      console.log("Descriptors extracted");
+      console.log(descriptors);
 
-      return descriptions;
+      return descriptors;
     };
 
     loadModels();
-    loadLabeledImages();
+    loadDescriptors();
   }, []);
 
   return (
