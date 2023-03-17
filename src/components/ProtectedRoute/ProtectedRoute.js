@@ -6,7 +6,7 @@ export default function ProtectedRoute() {
     const {user} = useAuth();
   return ( 
     <div>
-    {user? <Outlet/>:<Navigate to='/login' replace={true}/>}
+    {user? <Outlet/>:<Navigate to='/home' replace={true}/>}
     </div>
   )
 }

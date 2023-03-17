@@ -21,7 +21,7 @@ export default function Signup() {
     useEffect(() => {
         console.log(user)
         if(user){
-            navigate('/')
+            navigate('/home')
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user])
