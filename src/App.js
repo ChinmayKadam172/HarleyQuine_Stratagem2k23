@@ -10,24 +10,25 @@ import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import RegistrationForm from "./components/RegistrationForm/RegistrationForm";
 
 function App() {
-	return (
-		<div className="screen">
-			<AuthProvider>
-				<BrowserRouter>
-					<Routes>
-						<Route exact path="/" element={<ProtectedRoute />}>
-							<Route exact path="/face" element={<FaceRec />} />
-							<Route path="/regis" element={<DescriptorUploader />} />
-						</Route>
-						<Route exact path="/" element={<HomeScreen />} />
-						<Route exact path="/login" element={<Login />} />
-						<Route exact path="/signup" element={<Signup />} />
-						<Route path="/registration" element={<RegistrationForm />} />
-					</Routes>
-				</BrowserRouter>
-			</AuthProvider>
-		</div>
-	);
+  return (
+    <div className="screen">
+{/*     <AuthProvider> */}
+      <BrowserRouter>
+        <Routes>
+          
+          {/* <Route exact path='/' element={<ProtectedRoute/>}>
+            <Route exact path='/face' element={<FaceRec/>}/> 
+            <Route path="/regis" element={<DescriptorUploader />} />
+          </Route> */}
+            <Route exact path='/home' element={<HomeScreen/>}/>
+            <Route exact path='/login' element={<Login/>}/>
+            <Route exact path='/signup' element={<Signup/>}/>
+          <Route path="/registration" element={<RegistrationForm />} />
+    {/* </AuthProvider> */}
+        </Routes>
+      </BrowserRouter>
+    </div>
+  );
 }
 
 export default App;
