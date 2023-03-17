@@ -25,7 +25,7 @@ const FaceRecognition = () => {
     };
 
     const recognizeFaces = async () => {
-      const faceDataURL = process.env.PUBLIC_URL + "/data/faceData.json";
+      const faceDataURL = "http://localhost:5001/getFaceMaster";
       let labeledDescriptors;
 
       try {
@@ -62,7 +62,6 @@ const FaceRecognition = () => {
             detections,
             displaySize
           );
-
           canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
 
           const results = resizedDetections.map((d) =>
@@ -71,14 +70,7 @@ const FaceRecognition = () => {
 
           results.forEach((result, i) => {
             console.log(result.toString());
-            // const box = resizedDetections[i].detection.box;
-            // const drawBox = new faceapi.draw.DrawBox(box, {
-            //   label: result.toString(),
-            // });
-            // drawBox.draw(canvas);
           });
-
-          //   faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
         }, 100);
       });
     };
