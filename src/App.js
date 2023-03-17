@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 import FaceRec from "./components/FaceRec";
-import HomeScreen from "./components/HomeScreen";
+import HomeScreen from "./components/Landing Page/HomeScreen";
 
 function App() {
   return (
