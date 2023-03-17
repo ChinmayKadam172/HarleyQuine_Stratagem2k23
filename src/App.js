@@ -6,8 +6,7 @@ import Signup from "./components/Signup/Signup";
 import HomeScreen from "./components/Landing Page/HomeScreen";
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
-
-
+import RegistrationForm from "./components/RegistrationForm/RegistrationForm";
 
 function App() {
   return (
@@ -21,6 +20,7 @@ function App() {
             <Route exact path='/' element={<HomeScreen/>}/>
             <Route exact path='/login' element={<Login/>}/>
             <Route exact path='/signup' element={<Signup/>}/>
+          <Route path="/registration" element={<RegistrationForm />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
