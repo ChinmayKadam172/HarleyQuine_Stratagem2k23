@@ -15,6 +15,8 @@ const FaceRecognition = () => {
     };
 
     const loadDescriptors = async () => {
+      const label = "";
+
       // array of 5 uploaded images
       const uploadedImages = [];
 
@@ -34,7 +36,10 @@ const FaceRecognition = () => {
       console.log("Descriptors extracted");
       console.log(descriptors);
 
-      return descriptors;
+      return {
+        label,
+        descriptors: descriptors,
+      };
     };
 
     loadModels();
