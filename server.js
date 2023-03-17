@@ -24,6 +24,11 @@ mongoose.connect(
 	"mongodb+srv://afif:admin@cluster0.vsylghq.mongodb.net/?retryWrites=true&w=majority"
 );
 
+const faceMaster = {
+	label : String,
+	descriptors : Array
+}
+
 const regInfo = {
 	Uid: String,
 	First_name: String,
@@ -48,8 +53,45 @@ const appointment = {
 
 const RegInfo = mongoose.model("RegInfo", regInfo);
 const Appointment = mongoose.model("Appointment",appointment);
+const FaceMaster = mongoose.model("FaceMaster",faceMaster);
 
 console.log(PORT);
+
+app.route("/createFace").post(function (req, res) {
+	const newItem = new FaceMaster({
+		label : req.body.label,
+		descriptors : req.body.descriptors
+	});
+
+	newItem.save(function (err) {
+		if (!err) {
+			newItem.save(function (err) {
+				if (!err) {
+				} else {
+					console.log("FAIL", err);
+					res.send("FAIL");
+				}
+			});
+			res.send("SUCCESS");
+		} else {
+			console.log("FAIL", err);
+			res.send("FAIL");
+		}
+	});
+});
+
+app.route("/getFaceMaster").get(function (req, res) {
+	FaceMaster.find({}, function (err, foundPatient) {
+	  if (foundPatient) {
+		res.send(foundPatient.map((ele)=>{
+			return {label : ele.label, descriptors : ele.descriptors};
+		}));
+	  } else {
+		res.send(err);
+	  }
+	});
+  });
+
 
 app.route("/createPatient").post(function (req, res) {
 	const newItem = new RegInfo({
