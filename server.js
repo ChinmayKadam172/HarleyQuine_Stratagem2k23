@@ -78,9 +78,10 @@ app.route("/getFaceMaster").get(function (req, res) {
   FaceMaster.find({})
     .then((foundPatient) => {
       if (foundPatient) {
+        //console.log(Object.values(foundPatient[0].descriptors[0]))
         res.send(
           foundPatient.map((ele) => {
-            return { label: ele.label, descriptors: ele.descriptors };
+            return { label: ele.label, descriptors: ele.descriptors.map((obj)=>Object.values(obj)) };
           })
         );
       } else {
