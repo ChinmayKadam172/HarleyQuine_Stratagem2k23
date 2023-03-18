@@ -1,9 +1,14 @@
 import * as faceapi from "face-api.js";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef} from "react";
+import { useAuth } from "../context/AuthContext";
+import './Descriptor.css'
+import { useNavigate } from "react-router-dom";
 
 const FaceRecognition = () => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+  const {setPatient} = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadModels = async () => {
@@ -69,9 +74,15 @@ const FaceRecognition = () => {
           );
 
           results.forEach((result, i) => {
-            console.log(result.toString());
+            console.log(result.toString())
+            if(result.toString().length>14)
+            {
+              console.log('reached')
+              setPatient(result.toString().split(' ')[0]);
+              navigate('/token')
+            }
           });
-        }, 100);
+        }, 500);
       });
     };
 
@@ -81,16 +92,17 @@ const FaceRecognition = () => {
   }, []);
 
   return (
-    <div>
+    <div className="body">
       <video
+        className="frame"
         id="videoInput"
         ref={videoRef}
         width={720}
-        height={560}
+        height={540}
         autoPlay
         muted
       />
-      <div ref={canvasRef} />
+      <div ref={canvasRef} className="hide"/>
     </div>
   );
 };

@@ -1,0 +1,43 @@
+
+.regis-body{
+    padding: 20px 10px;
+    color: black;
+}
+
+.text-field {
+    position: relative;
+    margin: 16px 0;
+  }
+  
+  .text-field input {
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.42);
+    font-size: 20px;
+    padding: 10px 0;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: transparent;
+  }
+  
+  .text-field input:focus {
+    outline: none;
+    border-color: #1a73e8;
+  }
+  
+  .text-field label {
+    position: absolute;
+    pointer-events: none;
+    top: 16px;
+    left: 0;
+    font-size: 16px;
+    color: rgba(0, 0, 0, 0.54);
+    transition: all 0.2s ease;
+  }
+  
+  .text-field input:focus + label,
+  .text-field input:not(:placeholder-shown) + label {
+    top: 0;
+    left: 0;
+    font-size: 20px;
+    color: #1a73e8;
+  }

@@ -1,10 +1,11 @@
 import React from "react";
 import doctors from "../../assets/doctors.png";
-import wave from "../../assets/wave.png";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { logout } from "../../firebase";
 
 export default function HomeScreen() {
-  const navigate = useNavigate();
+  const {user} = useAuth()
   return (
     <>
       <div className="home-screen">
@@ -20,13 +21,13 @@ export default function HomeScreen() {
                 <a href="/home">Home</a>
               </li>
               <li>
-                <a href="/">Our Service</a>
+                <a href="/form">Update your Details</a>
               </li>
               <li>
-                <a href="/">Our Doctors</a>
+                <a href="/upload">Facial Scan</a>
               </li>
               <li>
-                <a href="/">Pricing Plan</a>
+                <a href="/">Account</a>
               </li>
               <li>
                 <a href="/">About</a>
@@ -34,11 +35,16 @@ export default function HomeScreen() {
             </ul>
           </div>
           <div className="right-nav">
+            {user?
+            <button className="signup" onClick={logout}>
+                Logout
+            </button>:
             <Link to="/signup">
               <button className="signup" onClick={() => console.log("hello")}>
                 Sign Up
               </button>
             </Link>
+            }
           </div>
         </div>
         <div className="main-div">
@@ -47,7 +53,7 @@ export default function HomeScreen() {
               Welcome to <span className="notpara">MedBook</span>
             </p>
             <p className="desc">
-              Book your appointments from the comfort of your home.
+              Hassle Free Registrations with modern facial recognition technology.
             </p>
           </div>
           <img src={doctors} alt="" className="doc-img" />

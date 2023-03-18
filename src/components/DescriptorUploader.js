@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import * as faceapi from "face-api.js";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
-
+import './Descriptor.css';
 
 const FaceRecognition = () => {
   const {user} = useAuth();
   const [uploadedImages,setUploadedImages] = useState([]);
+  const [descriptorsArray, setDescriptorsArray] = useState([]);
   useEffect(() => {
     const loadModels = async () => {
       const MODEL_URL = process.env.PUBLIC_URL + "/models";
@@ -39,13 +40,8 @@ const FaceRecognition = () => {
 
     console.log("Descriptors extracted");
     console.log(descriptors);
-    // api call to send to mongo
-    axios.post('http://localhost:5001/createFace', {label:user.uid, descriptors : descriptors}, {
-      headers: {
-        "Content-Type": "application/json"
-      }})
-      .then(response => console.log(response.data))
-      .catch(error => console.error(error));
+    setDescriptorsArray([...descriptorsArray,descriptors]);
+    console.log(descriptorsArray);
   };
 
   function uploadDescriptors(){
@@ -54,6 +50,12 @@ const FaceRecognition = () => {
       uploadedImages.forEach((ele)=>{
         loadDescriptors(ele);
       })
+      axios.post('http://localhost:5001/createFace', {label:user.uid, descriptors : descriptorsArray}, {
+      headers: {
+        "Content-Type": "application/json"
+      }})
+      .then(response => console.log(response.data))
+      .catch(error => console.error(error));
     }
   }
 
@@ -78,11 +80,13 @@ const FaceRecognition = () => {
   };  
 
   return (
-    <div>
-      <h1>FILLER</h1>
-      {uploadedImages.map((ele)=>{
-        return <p>{ele.size}</p>})}
-      <input type="file" onChange={handleFileSelect} accept="image"/>
+    <div className="uploader-body">
+      <h1>Upload Face Picture</h1>
+      <div>
+      <label for="file-input" className="upload-button">Choose a file</label>
+      <input id="file-input" type="file" onChange={handleFileSelect} accept="image"/>
+      </div>
+      {uploadedImages.length} Images uploaded
       <button onClick={()=>uploadDescriptors()}>Submit</button>
     </div>
   );

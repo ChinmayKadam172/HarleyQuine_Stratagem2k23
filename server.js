@@ -24,6 +24,10 @@ mongoose.connect(
   "mongodb+srv://afif:admin@cluster0.vsylghq.mongodb.net?retryWrites=true&w=majority"
 );
 
+const token = {
+  token : Number
+}
+
 const faceMaster = {
   label: String,
   descriptors: Array,
@@ -54,8 +58,35 @@ const appointment = {
 const RegInfo = mongoose.model("RegInfo", regInfo);
 const Appointment = mongoose.model("Appointment", appointment);
 const FaceMaster = mongoose.model("FaceMaster", faceMaster);
+const TokenRegister = mongoose.model("TokenRegister",token);
 
 console.log(PORT);
+
+// {"_id":{"$oid":"64151c9958c965dcc0ea4c07"},"token":{"$numberLong":"0"}}
+
+app.get("/getToken", async function (req, res) {
+  try {
+    const foundToken = await TokenRegister.findOne({ _id: "64151c9958c965dcc0ea4c07" });
+    if (!foundToken) {
+      return res.status(404).send({ message: "Token not found" });
+    }
+    console.log(foundToken.token);
+    let updatedItem;
+    if (foundToken.token > 1000) {
+      console.log("high");
+      updatedItem = { token: 0 };
+    } else {
+      console.log("low");
+      updatedItem = { token: foundToken.token + 1 };
+    }
+    await TokenRegister.updateOne({ _id: "64151c9958c965dcc0ea4c07" }, updatedItem);
+    res.send({ token: updatedItem.token });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ message: "Internal server error" });
+  }
+});
+
 
 app.route("/createFace").post(function (req, res) {
   const newItem = new FaceMaster({
@@ -81,7 +112,7 @@ app.route("/getFaceMaster").get(function (req, res) {
         //console.log(Object.values(foundPatient[0].descriptors[0]))
         res.send(
           foundPatient.map((ele) => {
-            return { label: ele.label, descriptors: ele.descriptors.map((obj)=>Object.values(obj)) };
+            return { label: ele.label, descriptors: ele.descriptors[0].map((obj)=>Object.values(obj)) };
           })
         );
       } else {
@@ -107,22 +138,16 @@ app.route("/createPatient").post(function (req, res) {
     Email: req.body.Email,
   });
 
-  newItem.save(function (err) {
-    if (!err) {
-      newItem.save(function (err) {
-        if (!err) {
-        } else {
-          console.log("FAIL", err);
-          res.send("FAIL");
-        }
-      });
+  newItem.save()
+    .then(() => {
       res.send("SUCCESS");
-    } else {
+    })
+    .catch((err) => {
       console.log("FAIL", err);
       res.send("FAIL");
-    }
-  });
+    });
 });
+
 
 app.route("/getPatient").get(function (req, res) {
   RegInfo.findOne({ Uid: req.body.uid }, function (err, foundPatient) {
@@ -133,6 +158,7 @@ app.route("/getPatient").get(function (req, res) {
     }
   });
 });
+
 
 app.route("/createAppointment").post(function (req, res) {
   console.log(req.body);

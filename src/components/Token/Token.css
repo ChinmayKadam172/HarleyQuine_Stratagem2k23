@@ -1,0 +1,27 @@
+.body-token{
+    background-color: #20bd95;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.token-number{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #1f745e;
+    padding: 25px;
+    color: antiquewhite;
+    font-size: 25px;
+}
+
+.token-heading{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 50px;
+    font-size: 25px;
+}

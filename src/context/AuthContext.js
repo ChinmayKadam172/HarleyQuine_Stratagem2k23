@@ -10,6 +10,7 @@ export function useAuth(){
 
 export function AuthProvider({children}) {
     const [user,setUser] = useState();
+    const [patient,setPatient] = useState();
     const [loading, setLoading] = useState(true);
 
     useEffect(()=>{
@@ -23,7 +24,9 @@ export function AuthProvider({children}) {
     }, [])
 
     const value = {
-        user 
+        user ,
+        patient,
+        setPatient
     }
 
   return (

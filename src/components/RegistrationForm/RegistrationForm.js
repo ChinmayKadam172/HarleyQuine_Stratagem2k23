@@ -1,249 +1,45 @@
-import React from "react";
-import {
-  Grid,
-  makeStyles,
-  Card,
-  CardContent,
-  MenuItem,
-  InputLabel,
-  Select,
-  CardActions,
-  Button,
-  CardHeader,
-  FormControl,
-} from "@material-ui/core";
+import React, {useState} from "react";
+import axios from "axios";
+import './Regis.css'
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
-import { Formik, Form, Field } from "formik";
-import * as Yup from "yup";
-import { TextField } from "formik-material-ui";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import dayjs from 'dayjs';
-import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-
-const useStyle = makeStyles((theme) => ({
-  padding: {
-    padding: theme.spacing(3),
-  },
-  button: {
-    margin: theme.spacing(1),
-  },
-}));
-
-//Data
-const initialValues = {
-  firstName: "",
-  lastName: "",
-  email: "",
-};
-
-const options = [
-  { label: "Male", value: "male" },
-  { label: "Female", value: "female" },
-  { label: "Rather not say", value: "rather_not_say" },
-];
-
-const blood = [
-  { label: "O+", value: "o_p" },
-  { label: "O-", value: "o_n" },
-  { label: "A+", value: "a_p" },
-  { label: "A-", value: "a_n" },
-  { label: "B+", value: "b_p" },
-  { label: "B-", value: "b_p" },
-];
-
-//password validation
-const numericRegEx = /(?=.*[0-9])/;
-
-//validation schema
-let validationSchema = Yup.object().shape({
-  firstName: Yup.string().required("Required"),
-  lastName: Yup.string().required("Required"),
-  gender: Yup.string().required("Required"),
-  blood: Yup.string().required("Required"),
-  conditions: Yup.string().required("Required"),
-  email: Yup.string().email("Enter a valid email address"),
-  medication: Yup.string().required("Required"),
-  phone: Yup.string().matches(numericRegEx,"Enter valid phone number").required("Required"),
-});
 
 const UserForm = () => {
-  const classes = useStyle();
+  const {user} = useAuth();
+  const [formData,setFormData] = useState({uid : user.uid});
+  const navigate = useNavigate();
 
-  const onSubmit = (values) => {
-    console.log(values);
-  };
+  function postData()
+  {
+    axios.post('http://localhost:5001/createPatient',formData)
+    .then(response => {
+      console.log(response);
+      navigate('/home')
+    })
+    .catch(error => {
+      console.log(error);
+    });
+  }
+
 
   return (
-    <Grid container justify="center" spacing={1}>
-      <Grid item md={7}>
-        <Card className={classes.padding}>
-          <CardHeader title="Patient Registration Form"></CardHeader>
-          <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={onSubmit}
-          >
-            {({ dirty, isValid, values, handleChange, handleBlur }) => {
-              return (
-                <Form>
-                  <CardContent>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <Grid item container spacing={1} justify="center">
-                      <Grid item xs={12} sm={6} md={6}>
-                        <Field
-                          label="First Name"
-                          variant="outlined"
-                          fullWidth
-                          name="firstName"
-                          value={values.firstName}
-                          component={TextField}
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6} md={6}>
-                        <Field
-                          label="Last Name"
-                          variant="outlined"
-                          fullWidth
-                          name="lastName"
-                          value={values.lastName}
-                          component={TextField}
-                        />
-                      </Grid>
-
-                      <Grid item xs={12} sm={6} md={6}>
-                        <FormControl fullWidth variant="outlined">
-                          <InputLabel id="demo-simple-select-outlined-label">
-                            Gender
-                          </InputLabel>
-                          <Select
-                            labelId="demo-simple-select-outlined-label"
-                            id="demo-simple-select-outlined"
-                            label="Gender"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.gender}
-                            name="gender"
-                          >
-                            {options.map((item) => (
-                              <MenuItem key={item.value} value={item.value}>
-                                {item.label}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                      <Grid item xs={12} sm={6} md={6}>
-                          <DesktopDatePicker
-                          label ="DOB"
-                            defaultValue={dayjs("2022-04-17")}
-                          />
-                      </Grid>
-                      <Grid item xs={12} sm={6} md={12}>
-                        <Field
-                          label="Address"
-                          variant="outlined"
-                          fullWidth
-                          name="address"
-                          value={values.address}
-                          component={TextField}
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6} md={6}>
-                        <Field
-                          label="Phone Number"
-                          variant="outlined"
-                          fullWidth
-                          name="phone"
-                          value={values.phone}
-                          component={TextField}
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6} md={6}>
-                        <Field
-                          label="Emergency Contact Number"
-                          variant="outlined"
-                          fullWidth
-                          name="phone"
-                          value={values.emergency}
-                          component={TextField}
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6} md={6}>
-                        <Field
-                          label="Email"
-                          variant="outlined"
-                          fullWidth
-                          name="email"
-                          value={values.email}
-                          component={TextField}
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6} md={6}>
-                        <FormControl fullWidth variant="outlined">
-                          <InputLabel id="demo-simple-select-outlined-label">
-                            Blood Group
-                          </InputLabel>
-                          <Select
-                            labelId="demo-simple-select-outlined-label"
-                            id="demo-simple-select-outlined"
-                            label="Occupation"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.blood}
-                            name="blood"
-                          >
-                            {blood.map((item) => (
-                              <MenuItem key={item.value} value={item.value}>
-                                {item.label}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                      <Grid item xs={12} sm={6} md={12}>
-                        <Field
-                          label="Chronic Medical Conditions"
-                          variant="outlined"
-                          fullWidth
-                          name="conditions"
-                          value={values.conditions}
-                          component={TextField}
-                          helperText="Put (-) if none"
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6} md={12}>
-                        <Field
-                          label="Long Term Ongoing Medication"
-                          variant="outlined"
-                          fullWidth
-                          name="medication"
-                          value={values.medication}
-                          component={TextField}
-                          helperText="Put (-) if none"
-                        />
-                      </Grid>
-                    </Grid>
-                    </LocalizationProvider>
-                  </CardContent>
-                  <CardActions>
-                    <Button
-                      disabled={!dirty || !isValid}
-                      variant="contained"
-                      color="primary"
-                      type="Submit"
-                      className={classes.button}
-                    >
-                      REGISTER
-                    </Button>
-                  </CardActions>
-                </Form>
-              );
-            }}
-          </Formik>
-        </Card>
-      </Grid>
-    </Grid>
+    <div className="regis-body">
+      <h1>Fill Personal Details</h1>
+      <br></br><br></br>
+      <div class="text-field">
+      <input type='text' onChange={(e)=>setFormData({...formData, First_name : e.target.value})} value={formData.First_name} placeholder="Enter your name" /><br></br>
+      <input type='date' onChange={(e)=>setFormData({...formData, Dob : e.target.value})} value={formData.Dob} placeholder="Date of Birth"/><br></br>
+      <input type='text' onChange={(e)=>setFormData({...formData, Gender : e.target.value})} value={formData.Gender} placeholder="Gender"/><br></br>
+      <input type='text' onChange={(e)=>setFormData({...formData, address : e.target.value})} value={formData.address} placeholder="address"/><br></br>
+      <input type='email' onChange={(e)=>setFormData({...formData, email : e.target.value})} value={formData.email} placeholder="email"/><br></br>
+      <input type='text' onChange={(e)=>setFormData({...formData, Blood_group : e.target.value})} value={formData.Blood_group} placeholder="Blood group"/><br></br>
+      <input type='text' onChange={(e)=>setFormData({...formData, Chronic_Medical_Conditions : e.target.value})} value={formData.Chronic_Medical_Conditions} placeholder="Chronic Medical Conditions"/><br></br>
+      <input type='text' onChange={(e)=>setFormData({...formData, Long_term_ongoing_Medication : e.target.value})} value={formData.Long_term_ongoing_Medication} placeholder="Long term ongoing medication"/>
+      </div>
+      <br></br><br></br>
+      <button onClick={()=>postData()}>Submit</button>
+    </div>
   );
 };
 

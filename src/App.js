@@ -8,6 +8,7 @@ import HomeScreen from "./components/Landing Page/HomeScreen";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import RegistrationForm from "./components/RegistrationForm/RegistrationForm";
+import Token from "./components/Token/Token";
 
 function App() {
   return (
@@ -17,12 +18,13 @@ function App() {
         <Routes>
           <Route exact path='/' element={<ProtectedRoute/>}>
             <Route exact path='/face' element={<FaceRec/>}/> 
-            <Route path="/regis" element={<DescriptorUploader />} />
+            <Route exact path='/form' element={<RegistrationForm/>}/> 
+            <Route exact path='/token' element={<Token/>}/> 
+            <Route path="/upload" element={<DescriptorUploader />} />
           </Route>
           <Route exact path='/home' element={<HomeScreen/>}/>
           <Route exact path='/login' element={<Login/>}/>
           <Route exact path='/signup' element={<Signup/>}/>
-          <Route path="/registration" element={<RegistrationForm />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
