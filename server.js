@@ -25,8 +25,8 @@ mongoose.connect(
 );
 
 const token = {
-  token : Number
-}
+  token: Number,
+};
 
 const faceMaster = {
   label: String,
@@ -58,7 +58,7 @@ const appointment = {
 const RegInfo = mongoose.model("RegInfo", regInfo);
 const Appointment = mongoose.model("Appointment", appointment);
 const FaceMaster = mongoose.model("FaceMaster", faceMaster);
-const TokenRegister = mongoose.model("TokenRegister",token);
+const TokenRegister = mongoose.model("TokenRegister", token);
 
 console.log(PORT);
 
@@ -66,7 +66,9 @@ console.log(PORT);
 
 app.get("/getToken", async function (req, res) {
   try {
-    const foundToken = await TokenRegister.findOne({ _id: "64151c9958c965dcc0ea4c07" });
+    const foundToken = await TokenRegister.findOne({
+      _id: "64151c9958c965dcc0ea4c07",
+    });
     if (!foundToken) {
       return res.status(404).send({ message: "Token not found" });
     }
@@ -79,7 +81,10 @@ app.get("/getToken", async function (req, res) {
       console.log("low");
       updatedItem = { token: foundToken.token + 1 };
     }
-    await TokenRegister.updateOne({ _id: "64151c9958c965dcc0ea4c07" }, updatedItem);
+    await TokenRegister.updateOne(
+      { _id: "64151c9958c965dcc0ea4c07" },
+      updatedItem
+    );
     res.send({ token: updatedItem.token });
   } catch (err) {
     console.error(err);
@@ -87,14 +92,14 @@ app.get("/getToken", async function (req, res) {
   }
 });
 
-
 app.route("/createFace").post(function (req, res) {
   const newItem = new FaceMaster({
     label: req.body.label,
     descriptors: req.body.descriptors,
   });
 
-  newItem.save()
+  newItem
+    .save()
     .then(() => {
       res.send("SUCCESS");
     })
@@ -104,7 +109,6 @@ app.route("/createFace").post(function (req, res) {
     });
 });
 
-
 app.route("/getFaceMaster").get(function (req, res) {
   FaceMaster.find({})
     .then((foundPatient) => {
@@ -112,7 +116,10 @@ app.route("/getFaceMaster").get(function (req, res) {
         //console.log(Object.values(foundPatient[0].descriptors[0]))
         res.send(
           foundPatient.map((ele) => {
-            return { label: ele.label, descriptors: ele.descriptors[0].map((obj)=>Object.values(obj)) };
+            return {
+              label: ele.label,
+              descriptors: ele.descriptors[0].map((obj) => Object.values(obj)),
+            };
           })
         );
       } else {
@@ -123,7 +130,6 @@ app.route("/getFaceMaster").get(function (req, res) {
       res.status(500).send(err);
     });
 });
-
 
 app.route("/createPatient").post(function (req, res) {
   const newItem = new RegInfo({
@@ -138,7 +144,8 @@ app.route("/createPatient").post(function (req, res) {
     Email: req.body.Email,
   });
 
-  newItem.save()
+  newItem
+    .save()
     .then(() => {
       res.send("SUCCESS");
     })
@@ -148,17 +155,20 @@ app.route("/createPatient").post(function (req, res) {
     });
 });
 
-
 app.route("/getPatient").get(function (req, res) {
-  RegInfo.findOne({ Uid: req.body.uid }, function (err, foundPatient) {
-    if (foundPatient) {
-      res.send(foundPatient);
-    } else {
-      res.send(err);
-    }
-  });
+  RegInfo.findOne({ Uid: req.body.uid })
+    .then((foundPatient) => {
+      if (foundPatient) {
+        res.send(foundPatient);
+      } else {
+        res.send("Patient not found");
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send("Server error");
+    });
 });
-
 
 app.route("/createAppointment").post(function (req, res) {
   console.log(req.body);
