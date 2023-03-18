@@ -5,7 +5,7 @@ import { useAuth } from "../../context/AuthContext";
 import { logout } from "../../firebase";
 
 export default function HomeScreen() {
-  const {user} = useAuth()
+  const { user } = useAuth();
   return (
     <>
       <div className="home-screen">
@@ -35,16 +35,17 @@ export default function HomeScreen() {
             </ul>
           </div>
           <div className="right-nav">
-            {user?
-            <button className="signup" onClick={logout}>
+            {user ? (
+              <button className="signup" onClick={logout}>
                 Logout
-            </button>:
-            <Link to="/signup">
-              <button className="signup" onClick={() => console.log("hello")}>
-                Sign Up
               </button>
-            </Link>
-            }
+            ) : (
+              <Link to="/signup">
+                <button className="signup" onClick={() => console.log("hello")}>
+                  Sign Up
+                </button>
+              </Link>
+            )}
           </div>
         </div>
         <div className="main-div">
@@ -53,7 +54,8 @@ export default function HomeScreen() {
               Welcome to <span className="notpara">MedBook</span>
             </p>
             <p className="desc">
-              Hassle Free Registrations with modern facial recognition technology.
+              Hassle Free Registrations with modern facial recognition
+              technology.
             </p>
           </div>
           <img src={doctors} alt="" className="doc-img" />
