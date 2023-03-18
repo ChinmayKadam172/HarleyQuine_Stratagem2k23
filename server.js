@@ -156,7 +156,7 @@ app.route("/createPatient").post(function (req, res) {
 });
 
 app.route("/getPatient").get(function (req, res) {
-  RegInfo.findOne({ Uid: req.body.uid })
+  RegInfo.findOne({ Uid: req.query.Uid })
     .then((foundPatient) => {
       if (foundPatient) {
         res.send(foundPatient);
